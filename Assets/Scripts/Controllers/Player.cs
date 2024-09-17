@@ -35,24 +35,24 @@ public class Player : MonoBehaviour
         Vector3 offset = Vector3.zero;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
+        
             offset += Vector3.left * 0.01f;
-        }
+        
         if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
+        
             offset += Vector3.right * 0.01f;
-        }
+        
         if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
+        
             offset += Vector3.up * 0.01f;
-        }
+        
         if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
+        
             offset += Vector3.down * 0.01f;
-        }
+        
 
     }
-    public void PlayerMovement(Vector3 offset)
+    private void PlayerMovement(Vector3 offset)
     {
         transform.position += offset;
 
