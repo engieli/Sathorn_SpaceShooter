@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
     public GameObject enemyPrefab;  
     public float spawnInterval = 5f;  
     public float initialSpeed = 2f;  
-    public float acceleration = 0.5f; 
+    public float acceleration = 1f; 
     public Vector3 movementDirection = Vector3.forward;
 
     private float currentSpeed;
