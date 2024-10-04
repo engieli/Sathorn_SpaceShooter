@@ -13,8 +13,12 @@ public class Player : MonoBehaviour
     private float acceleration;
     private Vector3 currentVelocity = Vector3.zero;
 
+    public float radarRadius = 5f;
+    public int circlePoints = 20;
 
-    // public Vector3 velocity = new Vector3(1f, 0f);
+    public GameObject powerupPrefab;
+
+
     void Start()
     {
 
@@ -44,10 +48,10 @@ public class Player : MonoBehaviour
             offset += Vector3.down;
 
 
-       //PlayerMovement(offset);
-        offset = offset.normalized; 
 
-       // inputDirection = inputDirection.normalized;
+        offset = offset.normalized;
+
+
 
         if (offset != Vector3.zero)
 
@@ -57,63 +61,64 @@ public class Player : MonoBehaviour
 
         else
         {
-     
+
             currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, acceleration * Time.deltaTime);
         }
 
 
-        transform.position += currentVelocity * Time.deltaTime;
 
+        EnemyRadar();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {  
+            SpawnPowerups(3f, 5); 
+        }
+    }
+
+    private void EnemyRadar()
+    {
+
+        //EnemyRadar
+        float enemyDistance = Vector3.Distance(transform.position, enemyTransform.position);
+
+        Color circleColor = (enemyDistance < radarRadius)? Color.red : Color.green;
+
+        float angleStep = 360f / circlePoints;
+
+        Vector3 previousPoint = transform.position + new Vector3(Mathf.Cos(0), Mathf.Sin(0), 0) * radarRadius;
+
+        for (int i = 1; i <= circlePoints; i++)
+        {
+
+            float angleInRadians = Mathf.Deg2Rad * (i * angleStep);
+            float xPos = Mathf.Cos(angleInRadians) * radarRadius;
+            float yPos = Mathf.Sin(angleInRadians) * radarRadius;
+            Vector3 currentPoint = transform.position + new Vector3(xPos, yPos, 0f);
+            Debug.DrawLine(previousPoint, currentPoint, circleColor);
+            previousPoint = currentPoint;
+        }
     }
 
     private void PlayerMovement(Vector3 offset)
     {
         transform.position += offset;
     }
+    public void SpawnPowerups(float radarRadius, int numberOfPowerups)
+    {
+        float angleStep = 360f / numberOfPowerups;
+
+        for (int i = 0; i < numberOfPowerups; i++)
+        {
+            float angleInDegrees = i * angleStep;
+            float angleInRadians = Mathf.Deg2Rad * angleInDegrees;
+
+            float xPos = transform.position.x + Mathf.Cos(angleInRadians) * radarRadius;
+            float yPos = transform.position.y + Mathf.Sin(angleInRadians) * radarRadius;
+            Vector3 spawnPosition = new Vector3(xPos, yPos, transform.position.z);
+
+            Instantiate(powerupPrefab, spawnPosition, Quaternion.identity);
+        }
+
+    }
+
 }
-
-
-
-// Task 1
-
-//transform.position = transform.position + velocity;
-//if (Input.GetKeyDown(KeyCode.LeftArrow))
-//{
-//    transform.position = new Vector3(transform.position.x - 1f, transform.position.y);
-//}
-//if (Input.GetKeyDown(KeyCode.RightArrow))
-//{
-//    transform.position = new Vector3(transform.position.x + 1f, transform.position.y);
-//}
-//if (Input.GetKeyDown(KeyCode.UpArrow))
-//{
-//    transform.position = new Vector3(transform.position.x + transform.position.z , +1f);
-//}
-//if (Input.GetKeyDown(KeyCode.DownArrow))
-//{
-//    transform.position = new Vector3(transform.position.x + transform.position.z, -1f);
-//}
-
-//Vector3 offset = Vector3.zero;
-
-//if (Input.GetKey(KeyCode.LeftArrow))
-
-//    offset += Vector3.left * 0.01f;
-
-//if (Input.GetKey(KeyCode.RightArrow))
-
-//    offset += Vector3.right * 0.01f;
-
-//if (Input.GetKey(KeyCode.UpArrow))
-
-//    offset += Vector3.up * 0.01f;
-
-//if (Input.GetKey(KeyCode.DownArrow))
-
-//    offset += Vector3.down * 0.01f;
-
-
-//PlayerMovement(offset);
-
-
-//Task 2
