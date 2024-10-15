@@ -18,6 +18,10 @@ public class Player : MonoBehaviour
 
     public GameObject powerupPrefab;
 
+    public List<Transform> debrisTransforms;
+    public float detectionRadius = 5f; 
+    public float moveAroundSpeed = 3f; 
+
 
     void Start()
     {
@@ -66,6 +70,21 @@ public class Player : MonoBehaviour
         }
 
 
+        if (!CheckObjectProximityAndMoveAround())
+        {
+            if (offset != Vector3.zero)
+            {
+                currentVelocity = Vector3.MoveTowards(currentVelocity, offset * maxSpeed, acceleration * Time.deltaTime);
+            }
+            else
+            {
+                currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, acceleration * Time.deltaTime);
+            }
+
+            transform.position += currentVelocity * Time.deltaTime;
+        }
+
+
 
         EnemyRadar();
 
@@ -97,6 +116,27 @@ public class Player : MonoBehaviour
             Debug.DrawLine(previousPoint, currentPoint, circleColor);
             previousPoint = currentPoint;
         }
+    }
+
+    private bool CheckObjectProximityAndMoveAround()
+    {
+        foreach (Transform objTransform in debrisTransforms) 
+        {
+            float distanceToObject = Vector3.Distance(transform.position, objTransform.position);
+
+            if (distanceToObject <= detectionRadius)
+            {
+               
+                Vector3 directionToObject = (objTransform.position - transform.position).normalized;
+                Vector3 perpendicularDirection = Vector3.Cross(directionToObject, Vector3.forward).normalized;
+
+               
+                transform.position += perpendicularDirection * moveAroundSpeed * Time.deltaTime;
+                return true; 
+            }
+        }
+
+        return false;  // Return false if no objects are close enough
     }
 
     private void PlayerMovement(Vector3 offset)
