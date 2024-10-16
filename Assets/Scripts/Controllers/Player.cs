@@ -97,7 +97,6 @@ public class Player : MonoBehaviour
     private void EnemyRadar()
     {
 
-        //EnemyRadar
         float enemyDistance = Vector3.Distance(transform.position, enemyTransform.position);
 
         Color circleColor = (enemyDistance < radarRadius)? Color.red : Color.green;
@@ -136,7 +135,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        return false;  // Return false if no objects are close enough
+        return false;  
     }
 
     private void PlayerMovement(Vector3 offset)
